@@ -23,3 +23,20 @@ const extractNumber = (input) => {
 checkStringLength('проверяемая строка', 20);
 isPalindrome('топот');
 extractNumber('2023 год');
+
+const parseTimeToMinutes = (time) => {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+const isMeetingWithinWorkingHours = (workStart, workEnd, meetingStart, duration) => {
+  const startWorkMinutes = parseTimeToMinutes(workStart);
+  const endWorkMinutes = parseTimeToMinutes(workEnd);
+  const startMeetingMinutes = parseTimeToMinutes(meetingStart);
+  const endMeetingMinutes = startMeetingMinutes + duration;
+
+  return startMeetingMinutes >= startWorkMinutes && endMeetingMinutes <= endWorkMinutes;
+};
+
+isMeetingWithinWorkingHours('08:00', '17:30', '14:00', 90);
+
