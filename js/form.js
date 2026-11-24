@@ -1,4 +1,6 @@
 import { isEscapeKey } from './util.js';
+import { resetScale } from './scale.js';
+import { resetEffects } from './effects.js';
 
 const MAX_HASHTAGS_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -66,12 +68,16 @@ pristine.addValidator(
 const openForm = () => {
   overlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  resetScale();
+  resetEffects();
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const closeForm = () => {
   form.reset();
   pristine.reset();
+  resetScale();
+  resetEffects();
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
