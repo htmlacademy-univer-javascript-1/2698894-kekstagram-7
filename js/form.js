@@ -7,6 +7,8 @@ import { showSuccessMessage, showErrorMessage } from './message.js';
 const MAX_HASHTAGS_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
 const VALID_HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const DEFAULT_PREVIEW_SRC = 'img/upload-default-image.jpg';
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
@@ -20,6 +22,8 @@ const cancelButton = form.querySelector('.img-upload__cancel');
 const hashtagsField = form.querySelector('.text__hashtags');
 const commentField = form.querySelector('.text__description');
 const submitButton = form.querySelector('.img-upload__submit');
+const previewImage = form.querySelector('.img-upload__preview img');
+const effectsPreviews = form.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -96,6 +100,10 @@ const closeForm = () => {
   pristine.reset();
   resetScale();
   resetEffects();
+  previewImage.src = DEFAULT_PREVIEW_SRC;
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
   overlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
@@ -120,6 +128,20 @@ hashtagsField.addEventListener('keydown', onFieldKeydown);
 commentField.addEventListener('keydown', onFieldKeydown);
 
 fileField.addEventListener('change', () => {
+  const file = fileField.files[0];
+  if (file) {
+    const fileName = file.name.toLowerCase();
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+    if (matches) {
+      const previewUrl = URL.createObjectURL(file);
+      previewImage.src = previewUrl;
+      effectsPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${previewUrl})`;
+      });
+    }
+  }
+
   openForm();
 });
 
